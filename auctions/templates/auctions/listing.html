@@ -1,8 +1,10 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-<div>
-    <a href="{% url 'index' %}">Back</a>
+<div class="text-center">
+    <form action="{% url 'index' %}">
+        <button type="submit" class="btn btn-primary">Back</button>
+    </form>
 </div>
 
 <div class="container listing-message-container text-center">
@@ -40,8 +42,7 @@
                 <p><b>Starting Bid: €{{ listing.startingBid }}</b></p>
             {% endif %}
         </div>
-        {% if user.is_authenticated %}
-        {% if listing.active == True %}
+        {% if listing.active == True and user.is_authenticated %}
             <div class="col-sm">
                 {% if listing.winning_user %}
                     <form action="{% url 'place_bid' listing.id %}" method="post">
@@ -57,12 +58,21 @@
                     </form>
                 {% endif %}
             </div>
-            <div class="col-sm">
-                <form>
-                    <input type="submit" value="Add to Watchlist">
-                </form>
-            </div>
-        {% endif %}
+            {% if is_following == True %}
+                <div class="col-sm">
+                    <form action="{% url 'remove_from_watchlist' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Remove from Watchlist">
+                    </form>
+                </div>
+                {% else %}        
+                <div class="col-sm">
+                    <form action="{% url 'add_to_watchlist' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Add to Watchlist">
+                    </form>
+                </div>
+            {% endif %}
         {% endif %}
     </div>
     <div class="row listing-content-row-3">
@@ -81,11 +91,12 @@
             {% endif %}
         </div>
     </div>
-    {% if listing.active == True %}
+    {% if listing.active == True and user.is_authenticated %}
     <div class="row listing-content-row-4">
         <div class="col-lg">
-            <form>
-                <input type="text" placeholder="Comment on this listing">
+            <form action="{% url 'add_comment' listing.id %}" method="post">
+                {% csrf_token %}
+                <input type="text" placeholder="Comment on this listing" name="placed_comment">
                 <input type="submit" value="Comment">
             </form>
         </div>
