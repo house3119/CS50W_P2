@@ -1,0 +1,33 @@
+body {
+    padding: 10px;
+}
+
+.listing-header-container {
+    padding-left: 0px;
+    padding-top: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.listing-content-row-1 {
+    margin-top: 15px;
+    padding-bottom: 15px;
+}
+
+.listing-content-row-2 {
+    margin-top: 15px;
+    padding-bottom: 15px;
+}
+
+.listing-content-row-3 {
+    margin-top: 15px;
+    padding-bottom: 15px;
+}
+
+.green-text {
+    color: green;
+}
+
+.red-text {
+    color: crimson;
+}

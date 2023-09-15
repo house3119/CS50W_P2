@@ -1,0 +1,96 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+<div>
+    <a href="{% url 'index' %}">Back</a>
+</div>
+
+<div class="container listing-message-container text-center">
+    {% if message %}
+        <b>{{ message }}</b>
+    {% endif %}
+</div>
+
+<div class="container listing-header-container">
+    <h2>{{ listing.title }}</h2>
+    {% if listing.active == True %}
+    <p>Posted by <b>{{ listing.poster }}</b> {{ listing.created }} <text class="green-text">Active</text></p>
+    {% else %}
+    <p>Posted by <b>{{ listing.poster }}</b> {{ listing.created }} <text class="red-text">Closed</text></p>
+    {% endif %}
+</div>
+
+<div class="container">
+    <div class="row listing-content-row-1">
+        <div class="col-md">
+            <img src="{{ listing.imageUrl }}" class="img-responsive" width="80%">
+        </div>
+        <div class="col-md">
+            <h5>Description</h5>
+            <p>{{ listing.description }}</p>
+        </div>
+    </div>
+    <div class="row listing-content-row-2">
+        <div class="col-sm">
+            {% if listing.winning_user %}
+                <p>
+                    <b>Current Bid: €{{ listing.winning_bid }}</b> by <b>{{ listing.winning_user }}</b>
+                </p>
+            {% else %}
+                <p><b>Starting Bid: €{{ listing.startingBid }}</b></p>
+            {% endif %}
+        </div>
+        {% if user.is_authenticated %}
+        {% if listing.active == True %}
+            <div class="col-sm">
+                {% if listing.winning_user %}
+                    <form action="{% url 'place_bid' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="number" min="{{ listing.winning_bid }}" placeholder="{{ listing.winning_bid }}" name="placed_bid">
+                        <input type="submit" value="Bid">
+                    </form>
+                {% else %}
+                    <form action="{% url 'place_bid' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="number" min="{{ listing.startingBid }}" placeholder="{{ listing.startingBid }}" name="placed_bid">
+                        <input type="submit" value="Bid">
+                    </form>
+                {% endif %}
+            </div>
+            <div class="col-sm">
+                <form>
+                    <input type="submit" value="Add to Watchlist">
+                </form>
+            </div>
+        {% endif %}
+        {% endif %}
+    </div>
+    <div class="row listing-content-row-3">
+        <div class="col-lg">
+            <h5>Comments:</h5>
+            {% if comments %}
+            <ul>
+                {% for comment in comments %}
+                    <li><b>{{ comment.commenter }}</b>: {{ comment.comment }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <ul>
+                <li>No comments yet</li>
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+    {% if listing.active == True %}
+    <div class="row listing-content-row-4">
+        <div class="col-lg">
+            <form>
+                <input type="text" placeholder="Comment on this listing">
+                <input type="submit" value="Comment">
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
