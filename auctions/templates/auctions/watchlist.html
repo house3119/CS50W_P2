@@ -1,0 +1,17 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+
+<h3>Auctions you're currently watching: </h3>
+<ul>
+{% for listing in listings %}
+    {% for watcher in listing.watchers.all %}
+        {% if watcher == user %}
+            <li><a href="{% url 'listing_page' listing.id %}">{{ listing }}</a></li>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+</ul>
+
+
+{% endblock %}

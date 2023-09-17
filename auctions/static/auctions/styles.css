@@ -24,6 +24,11 @@ body {
     padding-bottom: 15px;
 }
 
+.listing-content-row-4 {
+    margin-top: 15px;
+    padding-bottom: 25px;
+}
+
 .green-text {
     color: green;
 }

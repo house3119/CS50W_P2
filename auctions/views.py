@@ -204,4 +204,63 @@ def remove_from_watchlist(request, listing_id):
             listing.save()
             return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
         except:
-            return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))   
+            return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
+    else:
+        return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
+
+
+def close(request, listing_id):
+    if request.method == "POST":
+        try:
+            listing = Listing.objects.get(pk=listing_id)
+            listing.active = False
+            listing.save()
+            return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
+        except:
+            return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
+    else:
+        return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
+
+
+def open(request, listing_id):
+    if request.method == "POST":
+        try:
+            listing = Listing.objects.get(pk=listing_id)
+            listing.active = True
+            listing.save()
+            return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
+        except:
+            return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
+    else:
+        return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
+
+
+def watchlist(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        listings = Listing.objects.all()
+        return render(request, "auctions/watchlist.html", {
+            "listings": listings
+        })
+    
+
+def category_page(request):
+    categories = Listing.category_choices
+    holder = []
+    for i in categories:
+        holder.append(i[1])
+    return render(request, "auctions/category_page.html", {
+        "categories": holder
+    })
+    
+
+def category(request, category_name):
+    try:
+        listings = Listing.objects.filter(category=category_name[:2].upper(), active=True)
+        return render(request, "auctions/category.html", {
+            "category": category_name,
+            "listings": listings
+        })
+    except:
+        return HttpResponseRedirect(reverse("index"))

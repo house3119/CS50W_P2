@@ -1,25 +1,37 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-<div class="text-center">
-    <form action="{% url 'index' %}">
-        <button type="submit" class="btn btn-primary">Back</button>
-    </form>
-</div>
 
-<div class="container listing-message-container text-center">
-    {% if message %}
-        <b>{{ message }}</b>
-    {% endif %}
-</div>
+{% if user.is_authenticated and listing.active == False and listing.winning_user == user %}
+    <h5 class="text-center green-text">You won this item</h5>
+{% endif %}
 
 <div class="container listing-header-container">
-    <h2>{{ listing.title }}</h2>
-    {% if listing.active == True %}
-    <p>Posted by <b>{{ listing.poster }}</b> {{ listing.created }} <text class="green-text">Active</text></p>
-    {% else %}
-    <p>Posted by <b>{{ listing.poster }}</b> {{ listing.created }} <text class="red-text">Closed</text></p>
-    {% endif %}
+    <div class="row">
+        <div class="col-lg">
+            <h2>{{ listing.title }}</h2>
+            {% if listing.active == True %}
+            <p>
+                Posted by <b>{{ listing.poster }}</b> {{ listing.created }}               
+                <br>
+                <text>Category: <a href="{% url 'category' listing.get_category_display %}">{{ listing.get_category_display }}</a></text>
+                <br>
+                <text>Status: </text><text class="green-text">Active</text>
+            </p>
+            {% else %}
+            <p>   
+                Posted by <b>{{ listing.poster }}</b> {{ listing.created }} 
+                <br>        
+                <text>Category: <a href="{% url 'category' listing.get_category_display %}">{{ listing.get_category_display }}</a></text>
+                <br>
+                <text>Status: </text><text class="red-text">Closed</text>    
+            </p>
+            {% endif %}
+        </div>
+        <div class="col-lg">
+
+        </div>
+    </div>
 </div>
 
 <div class="container">
@@ -57,23 +69,51 @@
                         <input type="submit" value="Bid">
                     </form>
                 {% endif %}
+            </div>   
+        {% else %}
+            <div class="col-sm">
+                <p></p>
             </div>
-            {% if is_following == True %}
-                <div class="col-sm">
-                    <form action="{% url 'remove_from_watchlist' listing.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="Remove from Watchlist">
-                    </form>
-                </div>
-                {% else %}        
-                <div class="col-sm">
-                    <form action="{% url 'add_to_watchlist' listing.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="Add to Watchlist">
-                    </form>
-                </div>
-            {% endif %}
         {% endif %}
+
+        {% if is_following == True and user.is_authenticated %}
+            <div class="col-lg">
+                <form action="{% url 'remove_from_watchlist' listing.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Remove from Watchlist">
+                </form>
+                {% if user == listing.poster and listing.active == True %}
+                    <form action="{% url 'close' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Close Auction">
+                    </form>
+                {% elif user == listing.poster %}
+                    <form action="{% url 'open' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Open Auction">
+                    </form>
+                {% endif %}
+            </div>
+        {% elif user.is_authenticated %}        
+            <div class="col-lg">
+                <form action="{% url 'add_to_watchlist' listing.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Add to Watchlist">
+                </form>
+                {% if user == listing.poster and listing.active == True %}
+                    <form action="{% url 'close' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Close Auction">
+                    </form>
+                {% elif user == listing.poster %}
+                    <form action="{% url 'open' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Open Auction">
+                    </form>
+                {% endif %}
+            </div>
+        {% endif %}
+
     </div>
     <div class="row listing-content-row-3">
         <div class="col-lg">
@@ -102,6 +142,12 @@
         </div>
     </div>
     {% endif %}
+</div>
+
+<div class="text-center">
+    <form action="{% url 'index' %}">
+        <button type="submit" class="btn btn-primary">Back</button>
+    </form>
 </div>
 
 {% endblock %}

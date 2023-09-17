@@ -1,0 +1,28 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+
+
+<div class="container">
+    <h2 class="text-center">Active Listings for {{ category }}</h2>
+    <div class="row">
+        {% for listing in listings %}
+        <div class="col-4">
+            <h4><a href="{% url 'listing_page' listing.id %}">{{ listing.title }}</a></h4>
+            <img src="{{ listing.imageUrl }}" alt="No image available" style="height:200px;width:220px">
+            <p>Description: {{ listing.description }}</p>
+            {% if listing.winning_user %}
+            <p><b>Leading bid €{{ listing.winning_bid }} by {{ listing.winning_user }}</b></p>
+            {% else %}
+            <p><b>No bids, starting bid €{{ listing.startingBid }}</b></p>
+            {% endif %} 
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% if not listings %}
+    <p class="text-center red-text"><bold>No Active listings for this category</bold></p>
+{% endif %}
+
+
+{% endblock %}
