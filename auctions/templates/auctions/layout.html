@@ -8,6 +8,51 @@
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom: 25px;border-bottom: 1px solid #EEEEEE;">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <img src="/static/auctions/stock-logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                Auctions
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'category_page' %}">Categories</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'new_listing' %}">New Listing</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    {% if user.is_authenticated %}
+                        <span class="navbar-text" style="color: black;padding-right: 15px;">Signed in as <span style="font-weight: bold;">{{ user }}</span></span>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>              
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
+<!--
         <h1>Auctions</h1>
         <div>
             {% if user.is_authenticated %}
@@ -25,10 +70,10 @@
             </li>
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'new_listing' %}">New Listing</a>
+                    <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
+                    <a class="nav-link" href="{% url 'new_listing' %}">New Listing</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
@@ -43,6 +88,7 @@
             {% endif %}
         </ul>
         <hr>
+        -->
         {% block body %}
         {% endblock %}
     </body>

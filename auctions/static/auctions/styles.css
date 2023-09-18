@@ -1,5 +1,7 @@
 body {
     padding: 10px;
+    margin: 0px;
+    padding: 0px;
 }
 
 .listing-header-container {
@@ -35,4 +37,46 @@ body {
 
 .red-text {
     color: crimson;
+}
+
+.char-limiter {
+    width: 30ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.login_message {
+    margin-bottom: 15px;
+}
+
+.login_footer {
+    margin-top: 10px;
+}
+
+.login_header {
+    margin-bottom: 15px;
+}
+
+.listing-header {
+    margin-bottom: 35px;
+}
+
+.listing-box {
+    margin-bottom: 30px;
+    background-color: #F8F9FA;
+    border: 1px solid #EEEEEE;
+}
+
+.listing-img {
+    margin-bottom: 15px;
+}
+
+.listing-title {
+    color: black;
+}
+
+.watching-th {
+    padding-right: 80px;
+    border-bottom: 1px solid #EEEEEE;   
 }

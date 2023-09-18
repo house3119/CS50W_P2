@@ -2,15 +2,36 @@
 
 {% block body %}
 
+<div class="container px-4">
+    <h2 class="text-center listing-header">All Active Listings for {{ category }}</h2>
+    <div class="row gx-5">
+        {% for listing in listings %}
+            <div class="col-4">
+                <div class="p-3 listing-box">
+                    <h4><a href="{% url 'listing_page' listing.id %}" class="listing-title">{{ listing.title }}</a></h4>
+                    <p>Posted </b> {{ listing.created }}</p>
+                    <a href="{% url 'listing_page' listing.id %}"><img src="{{ listing.imageUrl }}" alt="No image available" style="height:160px;width:170px" class="listing-img"></a>
+                    <p class="char-limiter">{{ listing.description }}</p>
+                    {% if listing.winning_user %}
+                    <p><b>Leading bid €{{ listing.winning_bid }} by {{ listing.winning_user }}</b></p>
+                    {% else %}
+                    <p><b>No bids, starting bid €{{ listing.startingBid }}</b></p>
+                    {% endif %} 
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 
+<!--
 <div class="container">
-    <h2 class="text-center">Active Listings for {{ category }}</h2>
+    <h2 class="text-center listing-header">Active Listings for {{ category }}</h2>
     <div class="row">
         {% for listing in listings %}
         <div class="col-4">
             <h4><a href="{% url 'listing_page' listing.id %}">{{ listing.title }}</a></h4>
             <img src="{{ listing.imageUrl }}" alt="No image available" style="height:200px;width:220px">
-            <p>Description: {{ listing.description }}</p>
+            <p class="char-limiter">Description: {{ listing.description }}</p>
             {% if listing.winning_user %}
             <p><b>Leading bid €{{ listing.winning_bid }} by {{ listing.winning_user }}</b></p>
             {% else %}
@@ -20,8 +41,10 @@
         {% endfor %}
     </div>
 </div>
+-->
+
 {% if not listings %}
-    <p class="text-center red-text"><bold>No Active listings for this category</bold></p>
+    <h4 class="text-center red-text">No Active listings for this category</h4>
 {% endif %}
 
 

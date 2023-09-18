@@ -4,6 +4,8 @@
 
 {% if user.is_authenticated and listing.active == False and listing.winning_user == user %}
     <h5 class="text-center green-text">You won this item</h5>
+{% elif error %}
+    <h5 class="text-center red-text">{{ error }}</h5>
 {% endif %}
 
 <div class="container listing-header-container">
@@ -48,7 +50,7 @@
         <div class="col-sm">
             {% if listing.winning_user %}
                 <p>
-                    <b>Current Bid: €{{ listing.winning_bid }}</b> by <b>{{ listing.winning_user }}</b>
+                    <b>Highest Bid: €{{ listing.winning_bid }}</b> by <b>{{ listing.winning_user }}</b>
                 </p>
             {% else %}
                 <p><b>Starting Bid: €{{ listing.startingBid }}</b></p>

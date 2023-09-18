@@ -4,8 +4,16 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Listing, Bid, Comment
+from .models import User, Listing, Bid, Comment, User
 from .forms import NewListingForm
+
+
+def clearError(request):
+    try:
+        request.session.pop("errormessage")
+        return
+    except:
+        return
 
 
 def index(request):
@@ -79,7 +87,8 @@ def new_listing(request):
                 category = form_data["selected_category"],
                 description = form_data["description"],
                 startingBid = form_data["starting_bid"],
-                imageUrl = form_data["image_url"]
+                imageUrl = form_data["image_url"],
+                poster = User.objects.get(pk=request.session.get('_auth_user_id'))
                 )
             f.save()
             return HttpResponseRedirect(reverse("index"))
@@ -92,6 +101,12 @@ def new_listing(request):
 
 def listing_page(request, listing_id):
     try:
+        error = request.session.get("errormessage")
+    except:
+        pass
+    clearError(request)
+    
+    try:
         listing = Listing.objects.get(pk=listing_id)
         is_following = False
         if request.session.get('_auth_user_id'):               
@@ -101,13 +116,15 @@ def listing_page(request, listing_id):
         return render(request, "auctions/listing.html", {
             "listing": listing,
             "comments": Comment.objects.filter(commentedListing=listing),
-            "is_following":is_following
+            "is_following":is_following,
+            "error": error
         })
     except:
         return HttpResponseRedirect(reverse("index"))
 
 
 def place_bid(request, listing_id):
+    clearError(request)
     if request.method == "POST":
         try:
             listing = Listing.objects.get(pk=listing_id)
@@ -115,6 +132,7 @@ def place_bid(request, listing_id):
                 placed_bid = int(request.POST["placed_bid"])
                 starting_bid = int(listing.startingBid)
                 if placed_bid < starting_bid:
+                    request.session["errormessage"] = "Bid is not higher or equal to starting bid."
                     return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
                 else:
                     user_id = request.session.get('_auth_user_id')
@@ -138,6 +156,7 @@ def place_bid(request, listing_id):
             current_bid = int(listing.winning_bid)
             placed_bid = int(request.POST["placed_bid"])
             if placed_bid <= current_bid:
+                request.session["errormessage"] = "Bid is not higher than current leading bid."
                 return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
             else:
                 user_id = request.session.get('_auth_user_id')
