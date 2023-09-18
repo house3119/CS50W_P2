@@ -3,14 +3,21 @@
 {% block body %}
 
 <div class="container px-1">
-    <h2 class="text-center listing-header">All Active Listings</h2>
+    <h2 class="text-center listing-header">Active Listings for All Categories</h2>
     <div class="row gx-5">
         {% for listing in active_listings %}
             <div class="col-4">
-                <div class="p-3 listing-box">
+                <div class="p-3 listing-box overflow-hidden">
                     <h4><a href="{% url 'listing_page' listing.id %}" class="listing-title">{{ listing.title }}</a></h4>
+                    <text>Category: <a href="{% url 'category' listing.get_category_display %}">{{ listing.get_category_display }}</a></text>
                     <p>Posted </b> {{ listing.created }}</p>
+
+                    {% if listing.imageUrl != "" %}
                     <a href="{% url 'listing_page' listing.id %}"><img src="{{ listing.imageUrl }}" alt="No image available" style="height:160px;width:170px" class="listing-img"></a>
+                    {% else %}
+                    <a href="{% url 'listing_page' listing.id %}"><img src="/static/auctions/empty.jpg" alt="No image available" style="height:160px;width:170px" class="listing-img"></a>             
+                    {% endif %}
+
                     <p class="char-limiter">{{ listing.description }}</p>
                     {% if listing.winning_user %}
                     <p><b>Leading bid €{{ listing.winning_bid }} by {{ listing.winning_user }}</b></p>

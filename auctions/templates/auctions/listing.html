@@ -10,7 +10,7 @@
 
 <div class="container listing-header-container">
     <div class="row">
-        <div class="col-lg">
+        <div class="col-10">
             <h2>{{ listing.title }}</h2>
             {% if listing.active == True %}
             <p>
@@ -30,95 +30,51 @@
             </p>
             {% endif %}
         </div>
-        <div class="col-lg">
 
+        {% if user.is_authenticated %}
+        <div class="col-2 float-right">
+            <br>
+            <br>
+            {% if is_following == True %}
+                <form action="{% url 'remove_from_watchlist' listing.id %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-primary btn-sm" style="float: right; width: 170px; margin-bottom: 5px;">Remove from Watchlist</button>
+                </form>
+            {% else %}
+                <form action="{% url 'add_to_watchlist' listing.id %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-primary btn-sm" style="float: right; width: 170px; margin-bottom: 5px;">Add to Watchlist</button>
+                </form>
+            {% endif %}
+
+            {% if user == listing.poster and listing.active == True %}
+                <form action="{% url 'close' listing.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning btn-sm" style="float: right; width: 170px;">Close Auction</button>
+                </form>
+            {% elif user == listing.poster %}
+                <form action="{% url 'open' listing.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-sm" style="float: right; width: 170px;">Open Auction</button>
+                </form>
+            {% endif %}
         </div>
+        {% endif %}
+        
     </div>
 </div>
 
 <div class="container">
+
     <div class="row listing-content-row-1">
-        <div class="col-md">
+        <div class="col-5">
             <img src="{{ listing.imageUrl }}" class="img-responsive" width="80%">
         </div>
-        <div class="col-md">
-            <h5>Description</h5>
+        <div class="col-3">
+            <h5>Description:</h5>
             <p>{{ listing.description }}</p>
         </div>
-    </div>
-    <div class="row listing-content-row-2">
-        <div class="col-sm">
-            {% if listing.winning_user %}
-                <p>
-                    <b>Highest Bid: €{{ listing.winning_bid }}</b> by <b>{{ listing.winning_user }}</b>
-                </p>
-            {% else %}
-                <p><b>Starting Bid: €{{ listing.startingBid }}</b></p>
-            {% endif %}
-        </div>
-        {% if listing.active == True and user.is_authenticated %}
-            <div class="col-sm">
-                {% if listing.winning_user %}
-                    <form action="{% url 'place_bid' listing.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="number" min="{{ listing.winning_bid }}" placeholder="{{ listing.winning_bid }}" name="placed_bid">
-                        <input type="submit" value="Bid">
-                    </form>
-                {% else %}
-                    <form action="{% url 'place_bid' listing.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="number" min="{{ listing.startingBid }}" placeholder="{{ listing.startingBid }}" name="placed_bid">
-                        <input type="submit" value="Bid">
-                    </form>
-                {% endif %}
-            </div>   
-        {% else %}
-            <div class="col-sm">
-                <p></p>
-            </div>
-        {% endif %}
-
-        {% if is_following == True and user.is_authenticated %}
-            <div class="col-lg">
-                <form action="{% url 'remove_from_watchlist' listing.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" value="Remove from Watchlist">
-                </form>
-                {% if user == listing.poster and listing.active == True %}
-                    <form action="{% url 'close' listing.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="Close Auction">
-                    </form>
-                {% elif user == listing.poster %}
-                    <form action="{% url 'open' listing.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="Open Auction">
-                    </form>
-                {% endif %}
-            </div>
-        {% elif user.is_authenticated %}        
-            <div class="col-lg">
-                <form action="{% url 'add_to_watchlist' listing.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" value="Add to Watchlist">
-                </form>
-                {% if user == listing.poster and listing.active == True %}
-                    <form action="{% url 'close' listing.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="Close Auction">
-                    </form>
-                {% elif user == listing.poster %}
-                    <form action="{% url 'open' listing.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="Open Auction">
-                    </form>
-                {% endif %}
-            </div>
-        {% endif %}
-
-    </div>
-    <div class="row listing-content-row-3">
-        <div class="col-lg">
+        <div class="col-4">
             <h5>Comments:</h5>
             {% if comments %}
             <ul>
@@ -133,23 +89,47 @@
             {% endif %}
         </div>
     </div>
-    {% if listing.active == True and user.is_authenticated %}
-    <div class="row listing-content-row-4">
-        <div class="col-lg">
-            <form action="{% url 'add_comment' listing.id %}" method="post">
-                {% csrf_token %}
-                <input type="text" placeholder="Comment on this listing" name="placed_comment">
-                <input type="submit" value="Comment">
-            </form>
+
+    <div class="row listing-content-row-2">
+        <div class="col-8">
+            {% if listing.winning_user %}
+                <p class="bid-text">
+                    <b>Leading Bid: €{{ listing.winning_bid }}</b> by <b>{{ listing.winning_user }}</b>
+                </p>
+            {% else %}
+                <p class="bid-text"><b>Starting Bid: €{{ listing.startingBid }}</b></p>
+            {% endif %}
         </div>
+        {% if listing.active == True and user.is_authenticated %}
+            <div class="col-4">
+                <form action="{% url 'add_comment' listing.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="placed_comment" placeholder="Comment">
+                    <button type="submit" class="btn btn-primary btn-sm">Comment</button>
+                </form>
+            </div>
+        {% endif %}
     </div>
-    {% endif %}
-</div>
 
-<div class="text-center">
-    <form action="{% url 'index' %}">
-        <button type="submit" class="btn btn-primary">Back</button>
-    </form>
-</div>
+    <div class="row listing-content-row-3">
+        {% if listing.active == True and user.is_authenticated %}
+            <div class="col-3">
+                {% if listing.winning_user %}
+                    <form action="{% url 'place_bid' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="number" min="{{ listing.winning_bid }}" placeholder="{{ listing.winning_bid }}" name="placed_bid" style="width:120px">
+                        <button type="submit" class="btn btn-primary btn-sm">Place Bid</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'place_bid' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="number" min="{{ listing.startingBid }}" placeholder="{{ listing.startingBid }}" name="placed_bid" style="width:120px">
+                        <button type="submit" class="btn btn-primary btn-sm">Place Bid</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
 
+</div>
 {% endblock %}

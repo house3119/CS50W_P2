@@ -221,11 +221,11 @@ def remove_from_watchlist(request, listing_id):
             user_id = request.session.get('_auth_user_id')
             listing.watchers.remove(User.objects.get(id=user_id))
             listing.save()
-            return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
+            return HttpResponseRedirect(request.META['HTTP_REFERER'])
         except:
-            return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
+            return HttpResponseRedirect(request.META['HTTP_REFERER'])
     else:
-        return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
 def close(request, listing_id):

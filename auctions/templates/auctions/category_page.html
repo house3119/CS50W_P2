@@ -1,38 +1,15 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
+
 <div class="container">
-    <h2 class="listing-header">Select a category: </h2>
-    <div class="row">
-        <div>
-            <ul>
-                {% for category in categories %}
-                    <li><a href="{% url 'category' category %}">{{ category }}</a></li>
-                {% endfor %}
-            </ul>  
-        </div>
-    </div>
-</div>
-
-
-<!--
-<div class="container px-1">
-    <h2 class="listing-header text-center">Select a category: </h2>
-    <div class="row gx-5">
+    <h2 class="listing-header">Categories</h2>
+    <p>Select to view all active listings from chosen category:</p>
+    <ul>
         {% for category in categories %}
-            <div class="col-3">
-                <div class="p-3">
-                    <form action="{% url 'category' category %}">
-                        <button type="submit" class="btn btn-primary">{{ category }}</button>
-                    </form>
-                </div>
-            </div>
+            <li><a href="{% url 'category' category %}">{{ category }}</a></li>
         {% endfor %}
-    </div>
+    </ul>  
 </div>
--->
-
-
-
 
 {% endblock %}

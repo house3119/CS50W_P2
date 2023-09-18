@@ -13,23 +13,15 @@ body {
 
 .listing-content-row-1 {
     margin-top: 15px;
-    padding-bottom: 15px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #EEEEEE;
 }
 
 .listing-content-row-2 {
     margin-top: 15px;
-    padding-bottom: 15px;
+
 }
 
-.listing-content-row-3 {
-    margin-top: 15px;
-    padding-bottom: 15px;
-}
-
-.listing-content-row-4 {
-    margin-top: 15px;
-    padding-bottom: 25px;
-}
 
 .green-text {
     color: green;
@@ -40,10 +32,12 @@ body {
 }
 
 .char-limiter {
-    width: 30ch;
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+            line-clamp: 2; 
+    -webkit-box-orient: vertical;
+    height:45px;
 }
 
 .login_message {
@@ -78,5 +72,25 @@ body {
 
 .watching-th {
     padding-right: 80px;
-    border-bottom: 1px solid #EEEEEE;   
+    border-bottom: 1px solid #EEEEEE;  
+}
+
+.watching-td {
+
+    padding-right: 80px;
+}
+
+.button-very-small {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.new-li {
+    margin-bottom: 5px;
+}
+
+.bid-text {
+    font-size: 1.3rem;
 }

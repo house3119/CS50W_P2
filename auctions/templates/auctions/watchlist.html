@@ -12,8 +12,15 @@
             Status
         </th>
         <th class="watching-th">
-            Winning Bid by
+            Leading Bid by
         </th>
+        <th class="watching-th">
+            Posted
+        </th>
+        <th style="border-bottom: 1px solid #EEEEEE;">
+
+        </th>
+     
     {% for listing in listings %}
         {% for watcher in listing.watchers.all %}
             {% if watcher == user %}
@@ -27,10 +34,17 @@
                     {% if listing.winning_user == user %}
                         <td class="green-text watching-td"><b>You</b></td>
                     {% elif listing.winning_user %}
-                        <td><b>{{ listing.winning_user }}</b></td>
+                        <td class="watching-td"><b>{{ listing.winning_user }}</b></td>
                     {% else %}
-                        <td>No bids yet</td>
+                        <td class="watching-td">No bids yet</td>
                     {% endif %}
+                    <td class="watching-td">{{ listing.created }}</td>
+                    <td>
+                        <form action="{% url 'remove_from_watchlist' listing.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-sm button-very-small">Remove</button>
+                        </form>
+                    </td>
                 </tr>
             {% endif %}
         {% endfor %}
