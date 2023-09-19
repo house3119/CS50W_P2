@@ -1,36 +1,24 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<!--
-<form>
-    <input type="text" name="title" placeholder="Title">
-    <br>
-    <textarea name="description" placeholder="Description"></textarea>
-    <br>
-    <input type="number" name="starting_bid" placeholder="Starting Bid">
-    <select name="category">
-        
-    </select>
-</form>
--->
-{% if user.is_authenticated %}
-<h3 class="text-center">New Listing</h3>
-<div class="container">
-    <form action="{% url 'new_listing' %}" method="post">
-        {% csrf_token %}
-    <div class="form-group row d-flex justify-content-center">
-        <div class="col-sm-8">
-            {{ form }}
-        </div>
-    </div>
-    <div class="form-group row d-flex justify-content-center">
-        <input class="btn btn-primary" type="submit" value="Submit">
-    </div>
-    </form>
-</div>
 
+{% if user.is_authenticated %}
+    <h3 class="text-center">New Listing</h3>
+    <div class="container">
+        <form action="{% url 'new_listing' %}" method="post">
+            {% csrf_token %}
+        <div class="form-group row d-flex justify-content-center">
+            <div class="col-sm-8">
+                {{ form }}
+            </div>
+        </div>
+        <div class="form-group row d-flex justify-content-center">
+            <input class="btn btn-primary" type="submit" value="Submit">
+        </div>
+        </form>
+    </div>
 {% else %}
-<h2>Please Log In First</h2>
+    <h2>Please Log In First</h2>
 {% endif %}
 
 {% endblock %}

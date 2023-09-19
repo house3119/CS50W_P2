@@ -8,6 +8,7 @@ from .models import User, Listing, Bid, Comment, User
 from .forms import NewListingForm
 
 
+# Remove error message from session
 def clearError(request):
     try:
         request.session.pop("errormessage")
@@ -16,6 +17,7 @@ def clearError(request):
         return
 
 
+# Index view
 def index(request):
     return render(request, "auctions/index.html", {
         "active_listings": Listing.objects.filter(active=True)
@@ -74,6 +76,7 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
+# Route to post a new listing using Django Form
 def new_listing(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("index"))
@@ -99,6 +102,7 @@ def new_listing(request):
             })
 
 
+# Route to render pages for individual listings
 def listing_page(request, listing_id):
     try:
         error = request.session.get("errormessage")
@@ -117,12 +121,14 @@ def listing_page(request, listing_id):
             "listing": listing,
             "comments": Comment.objects.filter(commentedListing=listing),
             "is_following":is_following,
-            "error": error
+            "error": error,
+            "bids": Bid.objects.filter(relatedListing=listing)
         })
     except:
         return HttpResponseRedirect(reverse("index"))
 
 
+# Route to place bids on items
 def place_bid(request, listing_id):
     clearError(request)
     if request.method == "POST":
@@ -180,6 +186,7 @@ def place_bid(request, listing_id):
         return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
 
 
+# Route to add a comment to listing
 def add_comment(request, listing_id):
     if request.method == "POST":
         try:
@@ -202,6 +209,7 @@ def add_comment(request, listing_id):
         return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
     
 
+# Route to add a listing to watchlist
 def add_to_watchlist(request, listing_id):
     if request.method == "POST":
         try:
@@ -214,6 +222,7 @@ def add_to_watchlist(request, listing_id):
             return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
         
 
+# Route to remove a listing from watchlist
 def remove_from_watchlist(request, listing_id):
     if request.method == "POST":
         try:
@@ -228,6 +237,7 @@ def remove_from_watchlist(request, listing_id):
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
+# Route to close auction
 def close(request, listing_id):
     if request.method == "POST":
         try:
@@ -241,6 +251,7 @@ def close(request, listing_id):
         return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
 
 
+# Route to open a closed auction
 def open(request, listing_id):
     if request.method == "POST":
         try:
@@ -254,6 +265,7 @@ def open(request, listing_id):
         return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
 
 
+# Route that renders the watchlist page
 def watchlist(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("index"))
@@ -264,6 +276,7 @@ def watchlist(request):
         })
     
 
+# Route that renders categories page
 def category_page(request):
     categories = Listing.category_choices
     holder = []
@@ -274,6 +287,7 @@ def category_page(request):
     })
     
 
+# Route that renders a page containing listings for spesific category
 def category(request, category_name):
     try:
         listings = Listing.objects.filter(category=category_name[:2].upper(), active=True)

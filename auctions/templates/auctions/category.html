@@ -10,12 +10,19 @@
                 <div class="p-3 listing-box">
                     <h4><a href="{% url 'listing_page' listing.id %}" class="listing-title">{{ listing.title }}</a></h4>
                     <p>Posted </b> {{ listing.created }}</p>
-                    <a href="{% url 'listing_page' listing.id %}"><img src="{{ listing.imageUrl }}" alt="No image available" style="height:160px;width:170px" class="listing-img"></a>
-                    <p class="char-limiter">{{ listing.description }}</p>
-                    {% if listing.winning_user %}
-                    <p><b>Leading bid €{{ listing.winning_bid }} by {{ listing.winning_user }}</b></p>
+
+                    {% if listing.imageUrl != "" %}
+                        <a href="{% url 'listing_page' listing.id %}"><img src="{{ listing.imageUrl }}" alt="No image available" style="max-height:160px" class="listing-img"></a>
                     {% else %}
-                    <p><b>No bids, starting bid €{{ listing.startingBid }}</b></p>
+                        <a href="{% url 'listing_page' listing.id %}"><img src="/static/auctions/empty.jpg" alt="No image available" style="height:160px;width:170px" class="listing-img"></a>             
+                    {% endif %}
+
+                    <p class="char-limiter">{{ listing.description }}</p>
+                    
+                    {% if listing.winning_user %}
+                        <p><b>Leading bid €{{ listing.winning_bid }} by {{ listing.winning_user }}</b></p>
+                    {% else %}
+                        <p><b>No bids, starting bid €{{ listing.startingBid }}</b></p>
                     {% endif %} 
                 </div>
             </div>
@@ -23,29 +30,8 @@
     </div>
 </div>
 
-<!--
-<div class="container">
-    <h2 class="text-center listing-header">Active Listings for {{ category }}</h2>
-    <div class="row">
-        {% for listing in listings %}
-        <div class="col-4">
-            <h4><a href="{% url 'listing_page' listing.id %}">{{ listing.title }}</a></h4>
-            <img src="{{ listing.imageUrl }}" alt="No image available" style="height:200px;width:220px">
-            <p class="char-limiter">Description: {{ listing.description }}</p>
-            {% if listing.winning_user %}
-            <p><b>Leading bid €{{ listing.winning_bid }} by {{ listing.winning_user }}</b></p>
-            {% else %}
-            <p><b>No bids, starting bid €{{ listing.startingBid }}</b></p>
-            {% endif %} 
-        </div>
-        {% endfor %}
-    </div>
-</div>
--->
-
 {% if not listings %}
     <h4 class="text-center red-text">No Active listings for this category</h4>
 {% endif %}
-
 
 {% endblock %}

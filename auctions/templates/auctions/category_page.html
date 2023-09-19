@@ -6,9 +6,9 @@
     <h2 class="listing-header">Categories</h2>
     <p>Select to view all active listings from chosen category:</p>
     <ul>
-        {% for category in categories %}
-            <li><a href="{% url 'category' category %}">{{ category }}</a></li>
-        {% endfor %}
+    {% for category in categories %}
+        <li><a href="{% url 'category' category %}">{{ category }}</a></li>
+    {% endfor %}
     </ul>  
 </div>
 

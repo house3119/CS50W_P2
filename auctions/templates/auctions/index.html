@@ -13,22 +13,22 @@
                     <p>Posted </b> {{ listing.created }}</p>
 
                     {% if listing.imageUrl != "" %}
-                    <a href="{% url 'listing_page' listing.id %}"><img src="{{ listing.imageUrl }}" alt="No image available" style="height:160px;width:170px" class="listing-img"></a>
+                        <a href="{% url 'listing_page' listing.id %}"><img src="{{ listing.imageUrl }}" alt="No image available" style="max-height:160px" class="listing-img"></a>
                     {% else %}
-                    <a href="{% url 'listing_page' listing.id %}"><img src="/static/auctions/empty.jpg" alt="No image available" style="height:160px;width:170px" class="listing-img"></a>             
+                        <a href="{% url 'listing_page' listing.id %}"><img src="/static/auctions/empty.jpg" alt="No image available" style="height:160px;width:170px" class="listing-img"></a>             
                     {% endif %}
 
                     <p class="char-limiter">{{ listing.description }}</p>
+
                     {% if listing.winning_user %}
-                    <p><b>Leading bid €{{ listing.winning_bid }} by {{ listing.winning_user }}</b></p>
+                        <p><b>Leading bid €{{ listing.winning_bid }} by {{ listing.winning_user }}</b></p>
                     {% else %}
-                    <p><b>No bids, starting bid €{{ listing.startingBid }}</b></p>
+                        <p><b>No bids, starting bid €{{ listing.startingBid }}</b></p>
                     {% endif %} 
                 </div>
             </div>
         {% endfor %}
     </div>
 </div>
-
 
 {% endblock %}

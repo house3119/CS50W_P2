@@ -3,7 +3,9 @@
 {% block body %}
 
 {% if user.is_authenticated and listing.active == False and listing.winning_user == user %}
-    <h5 class="text-center green-text">You won this item</h5>
+    <h5 class="text-center green-text">Auction closed. You won this item</h5>
+{% elif user.is_authenticated and listing.active == False and listing.winning_user %}
+    <h5 class="text-center">Auction closed. <b>{{ listing.winning_user }}</b> won this item.</h5>
 {% elif error %}
     <h5 class="text-center red-text">{{ error }}</h5>
 {% endif %}
@@ -13,16 +15,22 @@
         <div class="col-10">
             <h2>{{ listing.title }}</h2>
             {% if listing.active == True %}
-            <p>
-                Posted by <b>{{ listing.poster }}</b> {{ listing.created }}               
+            <p> {% if listing.poster == user %}
+                Posted by <b>You</b> {{ listing.created }}
+                {% else %}
+                Posted by <b>{{ listing.poster }}</b> {{ listing.created }} 
+                {% endif %}              
                 <br>
                 <text>Category: <a href="{% url 'category' listing.get_category_display %}">{{ listing.get_category_display }}</a></text>
                 <br>
                 <text>Status: </text><text class="green-text">Active</text>
             </p>
             {% else %}
-            <p>   
+            <p> {% if listing.poster == user %}
+                Posted by <b>You</b> {{ listing.created }}
+                {% else %}
                 Posted by <b>{{ listing.poster }}</b> {{ listing.created }} 
+                {% endif %} 
                 <br>        
                 <text>Category: <a href="{% url 'category' listing.get_category_display %}">{{ listing.get_category_display }}</a></text>
                 <br>
@@ -59,16 +67,18 @@
                 </form>
             {% endif %}
         </div>
-        {% endif %}
-        
+        {% endif %}    
     </div>
 </div>
 
 <div class="container">
-
     <div class="row listing-content-row-1">
         <div class="col-5">
+            {% if listing.imageUrl == "" %}
+            <img src="/static/auctions/empty.jpg" class="img-responsive" width="80%">
+            {% else %}
             <img src="{{ listing.imageUrl }}" class="img-responsive" width="80%">
+            {% endif %}
         </div>
         <div class="col-3">
             <h5>Description:</h5>
@@ -94,10 +104,17 @@
         <div class="col-8">
             {% if listing.winning_user %}
                 <p class="bid-text">
+                    {% if listing.winning_user == user %}
+                    <b>Leading Bid: €{{ listing.winning_bid }}</b> by <b class="green-text">You</b>
+                    {% else %}
                     <b>Leading Bid: €{{ listing.winning_bid }}</b> by <b>{{ listing.winning_user }}</b>
+                    {% endif %}
+
                 </p>
+                <p> {{ bids | length }} bid(s) so far</p>
             {% else %}
                 <p class="bid-text"><b>Starting Bid: €{{ listing.startingBid }}</b></p>
+                <p> {{ bids | length }} bid(s) so far</p>
             {% endif %}
         </div>
         {% if listing.active == True and user.is_authenticated %}
@@ -130,6 +147,6 @@
             </div>
         {% endif %}
     </div>
-
 </div>
+
 {% endblock %}
