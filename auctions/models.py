@@ -5,6 +5,7 @@ from django.db import models
 class User(AbstractUser):
     pass
 
+
 class Listing(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
@@ -25,7 +26,6 @@ class Listing(models.Model):
     winning_user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name="usersWinningBids")
     winning_bid = models.IntegerField(default=0)
 
-
     def __str__(self):
         return f"{self.title}"
 
@@ -35,7 +35,6 @@ class Bid(models.Model):
     relatedListing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listingsBids")
     bid = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)
-
 
     def __str__(self):
         return f"€{self.bid} on {self.relatedListing.title}, bidder: {self.bidder}"

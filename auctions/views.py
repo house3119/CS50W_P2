@@ -175,9 +175,9 @@ def place_bid(request, listing_id):
             return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
         
         except:
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
     else:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("listing_page", args=(listing.id,)))
 
 
 def add_comment(request, listing_id):
